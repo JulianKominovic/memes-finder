@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+build() {
+    pnpm -h
+    if [ $? -eq 0 ]; then
+        pnpm run build
+        return 0
+    fi
+    yarn -h
+    if [ $? -eq 0 ]; then
+        yarn run build
+        return 0
+    fi
+    npm run build
+    
+}
+
+build
+git add dist
