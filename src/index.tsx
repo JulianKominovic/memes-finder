@@ -3,6 +3,7 @@ import {
   type ExtensionPages,
   type ExtensionMetadata
 } from 'sittly-devtools/dist/types'
+import { BsClipboard } from 'react-icons/bs'
 import { type MappedMemes, type Response } from './types'
 const { register, api, components, utils, hooks } = window.SittlyDevtools
 const { network, clipboard } = api
@@ -65,12 +66,12 @@ const pages: ExtensionPages = [
     route: '/memes',
     component() {
       const [images, setImages] = useState<MappedMemes[]>([])
-      const { searchbarText, setIsGlobalSearchEnable } = useServices(
-        (state) => ({
+      const { searchbarText, setIsGlobalSearchEnable, setContextMenuOptions } =
+        useServices((state) => ({
           searchbarText: state.searchbarText,
-          setIsGlobalSearchEnable: state.setIsGlobalSearchEnable
-        })
-      )
+          setIsGlobalSearchEnable: state.setIsGlobalSearchEnable,
+          setContextMenuOptions: state.setContextMenuOptions
+        }))
       const { debounce } = useDebounceFunction(600)
       useEffect(() => {
         setIsGlobalSearchEnable(false)
@@ -111,13 +112,24 @@ const pages: ExtensionPages = [
         <Command.Grid
           columns={3}
           id="sittly-memes"
-          items={images.map(({ title, url }) => ({
+          items={images.map(({ url }) => ({
             mainActionLabel: 'Paste meme to app',
             async onClick() {
               await clipboard.copyImageToClipboard(url)
               await clipboard.pasteClipboardToCurrentWindow()
             },
-            onHighlight() {},
+            onHighlight() {
+              setContextMenuOptions([
+                {
+                  title: 'Copy image',
+                  onClick: async () => {
+                    await clipboard.copyImageToClipboard(url)
+                  },
+                  icon: <BsClipboard />,
+                  mainActionLabel: 'Copy to clipboard'
+                }
+              ])
+            },
             customChildren: (
               <img
                 style={{
