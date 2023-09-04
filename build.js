@@ -44,6 +44,10 @@ build({
       'require("react")',
       'window.React'
     )
+    outputFileText = outputFileText.replaceAll(
+      /import_react([0-9]?[0-9]?[0-9]?[0-9]?)/gm,
+      `${name.replaceAll('-', '_')}$1`
+    )
 
     require('fs').writeFileSync('dist/compiled.js', outputFileText)
   })
