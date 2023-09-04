@@ -259,7 +259,7 @@ var metadata = {
   icon: /* @__PURE__ */ React.createElement(
     "img",
     {
-      src: "https://github.com/JulianKominovic/memes-finder/assets/logo.png?raw=true",
+      src: "https://github.com/JulianKominovic/memes-finder/blob/main/assets/logo.png?raw=true",
       alt: "memes extension logo"
     }
   ),
